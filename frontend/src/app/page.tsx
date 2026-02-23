@@ -6,20 +6,64 @@ import { Shield, TrendingUp, AlertTriangle, Zap, Wallet, BarChart3, Settings } f
 import { useState, useEffect } from 'react';
 import { usePortfolio } from '@/hooks/usePortfolio';
 import { useRiskAssessment } from '@/hooks/useRiskAssessment';
+import { useSwap } from '@/hooks/useSwap';
 import { PortfolioCard } from '@/components/PortfolioCard';
 import { RiskScore } from '@/components/RiskScore';
 import { AIAnalysis } from '@/components/AIAnalysis';
+import SwapPanel, { SwapData } from '@/components/SwapPanel';
+import RiskWarning from '@/components/RiskWarning';
+import TradeConfirmation from '@/components/TradeConfirmation';
 import { shortenAddress } from '@/lib/solana/utils';
+import BlurText from '@/components/blur';
 
 export default function Home() {
   const { connected, publicKey } = useWallet();
   const { solBalance, tokens, totalValue, loading } = usePortfolio();
   const { riskLevel, assessRisk } = useRiskAssessment();
+  const { tokenRisk, loading: swapLoading, scanTokenRisk, getSwapQuote, resetSwap } = useSwap();
   const [mounted, setMounted] = useState(false);
+  const [showTradingTab, setShowTradingTab] = useState(false);
+  const [showRiskWarning, setShowRiskWarning] = useState(false);
+  const [showTradeConfirm, setShowTradeConfirm] = useState(false);
+  const [pendingSwap, setPendingSwap] = useState<SwapData | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleAnimationComplete = () => {
+    console.log('Animation completed!');
+  };
+
+  const handleSwapInitiate = async (swapData: SwapData) => {
+    setPendingSwap(swapData);
+    // Scan the output token for risk
+    try {
+      await scanTokenRisk(swapData.toMint);
+    } catch (error) {
+      console.error('Error scanning token:', error);
+    }
+    setShowRiskWarning(true);
+  };
+
+  const handleRiskAcknowledge = () => {
+    setShowRiskWarning(false);
+    setShowTradeConfirm(true);
+  };
+
+  const handleConfirmTrade = async () => {
+    if (!pendingSwap || !publicKey) return;
+    try {
+      // In a real app, this would execute the transaction
+      // For now, we'll just show success and reset
+      setShowTradeConfirm(false);
+      setPendingSwap(null);
+      resetSwap();
+      // Show toast notification: "Trade submitted to blockchain"
+    } catch (error) {
+      console.error('Trade failed:', error);
+    }
+  };
 
   // Assess risk when portfolio data changes
   useEffect(() => {
@@ -35,17 +79,17 @@ export default function Home() {
       {/* Navigation */}
       <nav className="border-b border-white/10 px-6 py-4 flex items-center justify-between backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-linear-to-br from-[#39ff14] to-[#00ffcc] rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(57,255,20,0.3)]">
-            <Shield className="text-black w-6 h-6" />
-          </div>
+          
           <span className="text-xl font-bold tracking-tight">SCENTREE <span className="text-[#39ff14]">AI</span></span>
         </div>
         
         <div className="flex items-center gap-6">
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
-            <a href="#" className="hover:text-white transition-colors">Dashboard</a>
-            <a href="#" className="hover:text-white transition-colors">AI Analysis</a>
-            <a href="#" className="hover:text-white transition-colors">Trade</a>
+            <button onClick={() => setShowTradingTab(false)} className={`hover:text-white transition-colors ${!showTradingTab ? 'text-white' : ''}`}>Dashboard</button>
+            <button onClick={() => setShowTradingTab(true)} className={`hover:text-white transition-colors flex items-center gap-2 ${showTradingTab ? 'text-[#39ff14]' : ''}`}>
+              <TrendingUp className="w-4 h-4" />
+              Trade
+            </button>
             <a href="#" className="hover:text-white transition-colors">Risk Check</a>
           </div>
           <WalletMultiButton className="bg-[#39ff14]! text-black! font-bold! rounded-lg! hover:opacity-90! transition-all h-10! px-4!" />
@@ -55,16 +99,24 @@ export default function Home() {
       {/* Hero / Dashboard Content */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         {!connected ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-linear-to-r from-white to-white/40 bg-clip-text text-transparent">
-              SECURE YOUR <br /> <span className="text-[#39ff14]">SOLANA</span> JOURNEY
-            </h1>
+          
+           <div className="flex flex-col items-center justify-center py-20 text-center">
+<BlurText
+  text="SECURE YOUR SOLANA JOURNEY"
+  animateBy="words"
+ className="text-5xl md:text-7xl font-bold mb-6 text-white"
+  renderSegment={(word) =>
+    word === 'SOLANA'
+      ? <span className="text-[#39ff14]">{word}</span>
+      : word
+  }
+/>
             <p className="text-white/60 max-w-2xl text-lg mb-10 leading-relaxed">
               The AI-native wallet that smells the rugs before they happen. 
               Intelligent analysis, guarded automation, and capital allocation guidance.
             </p>
             <div className="flex items-center gap-4">
-              <WalletMultiButton className="bg-[#39ff14]! text-black! font-bold! rounded-xl! h-14! px-8! text-lg shadow-[0_0_30px_rgba(57,255,20,0.4)]" />
+              <WalletMultiButton className="bg-[#39ff14]! text-black! font-bold! rounded-3xl! h-14! px-5! text-lg shadow-[0_0_30px_rgba(57,255,20,0.4)]" />
               <button className="h-14 px-8 rounded-xl border border-white/10 bg-white/5 font-bold hover:bg-white/10 transition-all">
                 View Documentation
               </button>
@@ -104,24 +156,73 @@ export default function Home() {
 
             {/* Main Dashboard Area */}
             <div className="lg:col-span-3 space-y-8">
-              <AIAnalysis isLoading={loading} />
-              {tokens.length > 0 && (
-                <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden">
-                  <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-                    <h2 className="text-xl font-bold">Assets</h2>
-                    <button className="text-sm text-[#39ff14] hover:underline">View All</button>
+              {showTradingTab ? (
+                <div className="space-y-8">
+                  <div>
+                    <h1 className="text-3xl font-bold mb-2">Manual Trading</h1>
+                    <p className="text-white/60">Swap tokens with integrated risk assessment</p>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                      <thead>
-                        <tr className="text-xs text-white/40 uppercase tracking-wider border-b border-white/5">
-                          <th className="px-8 py-4 font-medium">Asset</th>
-                          <th className="px-8 py-4 font-medium">Balance</th>
-                          <th className="px-8 py-4 font-medium">Price</th>
-                          <th className="px-8 py-4 font-medium">Value</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/5">
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Swap Panel */}
+                    <div>
+                      <SwapPanel 
+                        onSwapInitiate={handleSwapInitiate}
+                        disabled={swapLoading}
+                      />
+                    </div>
+
+                    {/* Risk Warning or Info */}
+                    {tokenRisk && !showRiskWarning && pendingSwap && (
+                      <div>
+                        <h3 className="text-lg font-bold mb-4">Token Analysis</h3>
+                        <RiskWarning
+                          rugRiskScore={tokenRisk.rugRiskScore}
+                          riskLevel={tokenRisk.riskLevel}
+                          liquidity={tokenRisk.liquidity}
+                          mintAuthority={tokenRisk.mintAuthority}
+                          topHolderPercent={tokenRisk.topHolderPercent}
+                          explanation={tokenRisk.explanation}
+                          onAcknowledge={handleRiskAcknowledge}
+                          loading={swapLoading}
+                        />
+                      </div>
+                    )}
+
+                    {/* Trading Info */}
+                    {!tokenRisk && (
+                      <div className="bg-[#111] border border-white/5 rounded-2xl p-8 flex items-center justify-center">
+                        <div className="text-center">
+                          <Shield className="w-16 h-16 text-[#39ff14]/40 mx-auto mb-4" />
+                          <h3 className="font-bold text-lg mb-2">Enter Amount to Start</h3>
+                          <p className="text-white/60 text-sm max-w-xs">
+                            Select tokens and enter an amount. We'll analyze the token for risk before showing you the swap preview.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <AIAnalysis isLoading={loading} />
+                  {tokens.length > 0 && (
+                    <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden">
+                      <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
+                        <h2 className="text-xl font-bold">Assets</h2>
+                        <button className="text-sm text-[#39ff14] hover:underline">View All</button>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                          <thead>
+                            <tr className="text-xs text-white/40 uppercase tracking-wider border-b border-white/5">
+                              <th className="px-8 py-4 font-medium">Asset</th>
+                              <th className="px-8 py-4 font-medium">Balance</th>
+                              <th className="px-8 py-4 font-medium">Price</th>
+                              <th className="px-8 py-4 font-medium">Value</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-white/5">
                         <tr className="hover:bg-white/2 transition-colors">
                           <td className="px-8 py-4">
                             <div className="flex items-center gap-3">
@@ -155,28 +256,45 @@ export default function Home() {
                     </table>
                   </div>
                 </div>
-              )}
+                  )}
 
-              {/* AI Insight Bar */}
-              <div className="bg-gradient-to-r from-[#111] to-[#151515] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#39ff14] rounded-full flex items-center justify-center animate-pulse shadow-[0_0_20px_rgba(57,255,20,0.2)]">
-                    <Shield className="text-black w-6 h-6" />
+                  {/* AI Insight Bar */}
+                  <div className="bg-gradient-to-r from-[#111] to-[#151515] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-[#39ff14] rounded-full flex items-center justify-center animate-pulse shadow-[0_0_20px_rgba(57,255,20,0.2)]">
+                        <Shield className="text-black w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="font-bold">Scentree AI Insight</p>
+                        <p className="text-sm text-white/60 italic">"I've scanned your wallet. You're safe to proceed with a Low Risk strategy."</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-white/40 uppercase tracking-wider">Confidence Score</p>
+                      <p className="text-xl font-bold text-[#39ff14]">98%</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold">Scentree AI Insight</p>
-                    <p className="text-sm text-white/60 italic">"I've scanned your wallet. You're safe to proceed with a Low Risk strategy."</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-white/40 uppercase tracking-wider">Confidence Score</p>
-                  <p className="text-xl font-bold text-[#39ff14]">98%</p>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
         )}
       </div>
+
+      {/* Trade Confirmation Modal */}
+      {showTradeConfirm && pendingSwap && (
+        <TradeConfirmation
+          swapData={pendingSwap}
+          tokenRisk={tokenRisk}
+          onConfirm={handleConfirmTrade}
+          onCancel={() => {
+            setShowTradeConfirm(false);
+            setPendingSwap(null);
+            setShowRiskWarning(true);
+          }}
+          loading={swapLoading}
+        />
+      )}
     </main>
   );
 }
