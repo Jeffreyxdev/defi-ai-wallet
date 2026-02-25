@@ -3,35 +3,35 @@
 
 set -e
 
-echo "🌳 Scentree Quick Start"
+echo " Scentree Quick Start"
 echo "======================"
 echo ""
 
 # Check prerequisites
 echo "Checking prerequisites..."
-command -v node >/dev/null 2>&1 || { echo "❌ Node.js not found. Please install Node.js 18+"; exit 1; }
-command -v npm >/dev/null 2>&1 || { echo "❌ npm not found"; exit 1; }
-echo "✅ Node.js $(node -v)"
-echo "✅ npm $(npm -v)"
+command -v node >/dev/null 2>&1 || { echo " Node.js not found. Please install Node.js 18+"; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo " npm not found"; exit 1; }
+echo " Node.js $(node -v)"
+echo " npm $(npm -v)"
 echo ""
 
 # Install dependencies
 echo "Installing dependencies..."
 npm install 2>&1 | tail -5
-echo "✅ Root dependencies installed"
+echo " Root dependencies installed"
 echo ""
 
 echo "Installing frontend dependencies..."
 cd frontend
 npm install 2>&1 | tail -5
-echo "✅ Frontend dependencies installed"
+echo "- Frontend dependencies installed"
 cd ..
 echo ""
 
 echo "Installing backend dependencies..."
 cd backend
 npm install 2>&1 | tail -5
-echo "✅ Backend dependencies installed"
+echo "- Backend dependencies installed"
 cd ..
 echo ""
 
@@ -42,7 +42,7 @@ if [ ! -f frontend/.env.local ]; then
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_SOLANA_NETWORK=devnet
 EOF
-  echo "✅ Created frontend/.env.local"
+  echo "- Created frontend/.env.local"
 fi
 
 if [ ! -f backend/.env ]; then
@@ -66,18 +66,18 @@ MAX_ALLOCATION=0.1
 DAILY_TRADE_LIMIT=5
 DEFAULT_STOP_LOSS=10.0
 EOF
-  echo "✅ Created backend/.env"
+  echo "- Created backend/.env"
 fi
 echo ""
 
 # Build check
 echo "Verifying builds..."
 cd backend
-npm run build > /dev/null 2>&1 && echo "✅ Backend builds successfully" || echo "❌ Backend build failed"
+npm run build > /dev/null 2>&1 && echo "- Backend builds successfully" || echo "x Backend build failed"
 cd ..
 
 cd frontend
-npm run build > /dev/null 2>&1 && echo "✅ Frontend builds successfully" || echo "❌ Frontend build failed"
+npm run build > /dev/null 2>&1 && echo "- Frontend builds successfully" || echo "x Frontend build failed"
 cd ..
 echo ""
 
@@ -88,7 +88,7 @@ echo "  1. createdb scentree"
 echo "  2. cd backend && npx prisma migrate deploy"
 echo ""
 
-echo "🚀 Ready to start development!"
+echo " Ready to start development!"
 echo ""
 echo "In Terminal 1 (Backend):"
 echo "  cd backend && npm run dev"
