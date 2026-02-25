@@ -2,7 +2,7 @@
 
 A comprehensive AI-powered Solana wallet management and trading platform with built-in risk assessment and anti-rug protection.
 
-## 🚀 Features
+##  Features
 
 ### Phase 1: Wallet Connect + Portfolio View ✅
 - **Solana Wallet Integration**: Support for Phantom and Solflare wallets
@@ -28,7 +28,7 @@ A comprehensive AI-powered Solana wallet management and trading platform with bu
 - **Trade Execution**: Atomic swap execution with rollback
 - **Rate Limiting**: Daily trade limits and cooldown periods
 
-## 📦 Project Structure
+##  Project Structure
 
 ```
 scentree/
@@ -49,13 +49,13 @@ scentree/
 └── README.md
 ```
 
-## 🔧 Prerequisites
+##  Prerequisites
 
 - Node.js 18+ and npm
 - PostgreSQL 13+
 - Git
 
-## ⚙️ Setup Instructions
+##  Setup Instructions
 
 ### 1. Clone and Install Dependencies
 
@@ -116,7 +116,7 @@ npm run dev
 
 Access the app at `http://localhost:3000`
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Frontend Stack
 - **Framework**: Next.js 16 with App Router
@@ -131,7 +131,7 @@ Access the app at `http://localhost:3000`
 - **Blockchain**: @solana/web3.js
 - **APIs**: Helius, Jupiter, xAI Grok
 
-## 🔐 Security Considerations
+## Security Considerations
 
 1. **Wallet Security**: Keys never leave the user's browser
 2. **API Security**: CORS configured, rate limiting enabled
@@ -139,7 +139,7 @@ Access the app at `http://localhost:3000`
 4. **Risk Assessment**: Smart contract analysis before trades
 5. **Audit Trail**: Complete logging of all decisions
 
-## 📊 API Endpoints
+## API Endpoints
 
 ### AI Analysis
 - `POST /api/analyze-intent` - Get AI recommendations
@@ -150,7 +150,7 @@ Access the app at `http://localhost:3000`
 - `GET /api/scan-token/:mint` - Analyze token for rug risk
 - `GET /api/trade-history/:walletAddress` - Get trading history
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Build frontend
@@ -163,7 +163,7 @@ cd backend && npm run build
 cd backend && npm run build
 ```
 
-## 📝 Development Workflow
+## Development Workflow
 
 1. **Create feature branch**: `git checkout -b feature/name`
 2. **Make changes** in frontend or backend
@@ -171,7 +171,7 @@ cd backend && npm run build
 4. **Build for production**: `npm run build`
 5. **Submit PR** with clear description
 
-## 🚨 Common Issues
+##  Common Issues
 
 ### Database Connection Error
 - Check PostgreSQL is running: `psql postgres`
@@ -186,13 +186,13 @@ cd backend && npm run build
 - Ensure NEXT_PUBLIC_API_URL matches backend URL
 - Check backend CORS configuration in `src/index.ts`
 
-## 📚 Documentation
+## Documentation
 
 - [Frontend Guide](./frontend/README.md)
 - [Backend Guide](./backend/README.md)
 - [API Reference](./API.md)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! Please:
 1. Follow TypeScript strict mode
@@ -200,7 +200,7 @@ Contributions welcome! Please:
 3. Update documentation
 4. Use conventional commit messages
 
-## 📄 License
+##  License
 
 MIT License - see LICENSE file for details
 
