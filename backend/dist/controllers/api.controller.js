@@ -3,11 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = apiController;
 const ai_service_1 = require("../services/ai.service");
 const risk_service_1 = require("../services/risk.service");
-const client_1 = require("@prisma/client");
 const aiService = new ai_service_1.AIService();
 const riskService = new risk_service_1.RiskService();
-const prisma = new client_1.PrismaClient();
 async function apiController(fastify) {
+    const getPrisma = fastify.getPrisma;
     // AI Intent Analysis
     fastify.post('/api/analyze-intent', async (request, reply) => {
         const { intent, walletAddress, portfolioData } = request.body;
@@ -17,16 +16,19 @@ async function apiController(fastify) {
         try {
             const analysis = await aiService.analyzeIntent(intent, portfolioData);
             // Log the decision
-            await prisma.aIDecisions.create({
-                data: {
-                    userId: walletAddress,
-                    intent,
-                    suggestion: analysis.suggestion,
-                    confidence: analysis.confidence,
-                    reasoning: analysis.reasoning,
-                    riskRating: analysis.riskRating,
-                }
-            }).catch(e => console.error("Prisma logging error:", e));
+            const prisma = await getPrisma();
+            if (prisma.aIDecisions) {
+                await prisma.aIDecisions.create({
+                    data: {
+                        userId: walletAddress,
+                        intent,
+                        suggestion: analysis.suggestion,
+                        confidence: analysis.confidence,
+                        reasoning: analysis.reasoning,
+                        riskRating: analysis.riskRating,
+                    }
+                }).catch((e) => console.error("Prisma logging error:", e));
+            }
             return reply.send(analysis);
         }
         catch (error) {
@@ -43,21 +45,24 @@ async function apiController(fastify) {
         try {
             const scanResult = await riskService.scanToken(mint);
             // Cache the result
-            await prisma.tokenRisk.upsert({
-                where: { mintAddress: mint },
-                update: {
-                    rugRiskScore: scanResult.rugRiskScore,
-                    riskLevel: scanResult.riskLevel,
-                    explanation: scanResult.explanation,
-                    lastChecked: new Date(),
-                },
-                create: {
-                    mintAddress: mint,
-                    rugRiskScore: scanResult.rugRiskScore,
-                    riskLevel: scanResult.riskLevel,
-                    explanation: scanResult.explanation,
-                }
-            }).catch(e => console.error("Token cache error:", e));
+            const prisma = await getPrisma();
+            if (prisma.tokenRisk) {
+                await prisma.tokenRisk.upsert({
+                    where: { mintAddress: mint },
+                    update: {
+                        rugRiskScore: scanResult.rugRiskScore,
+                        riskLevel: scanResult.riskLevel,
+                        explanation: scanResult.explanation,
+                        lastChecked: new Date(),
+                    },
+                    create: {
+                        mintAddress: mint,
+                        rugRiskScore: scanResult.rugRiskScore,
+                        riskLevel: scanResult.riskLevel,
+                        explanation: scanResult.explanation,
+                    }
+                }).catch((e) => console.error("Token cache error:", e));
+            }
             return reply.send(scanResult);
         }
         catch (error) {
@@ -72,6 +77,19 @@ async function apiController(fastify) {
             return reply.status(400).send({ error: "Wallet address is required." });
         }
         try {
+            const prisma = await getPrisma();
+            // If Prisma is not available, return mock data
+            if (!prisma.user) {
+                return reply.send({
+                    id: walletAddress,
+                    walletAddress,
+                    riskProfile: {
+                        riskScore: 50,
+                        riskLevel: "Medium",
+                    },
+                    settings: {}
+                });
+            }
             const user = await prisma.user.findUnique({
                 where: { walletAddress },
                 include: { riskProfile: true, settings: true }
@@ -110,6 +128,15 @@ async function apiController(fastify) {
             return reply.status(400).send({ error: "Wallet address and risk score are required." });
         }
         try {
+            const prisma = await getPrisma();
+            // If Prisma is not available, return mock response
+            if (!prisma.user) {
+                return reply.send({
+                    riskScore,
+                    riskLevel: riskLevel || "Medium",
+                    userId: walletAddress
+                });
+            }
             const user = await prisma.user.findUnique({
                 where: { walletAddress },
             });
@@ -137,6 +164,11 @@ async function apiController(fastify) {
             return reply.status(400).send({ error: "Wallet address is required." });
         }
         try {
+            const prisma = await getPrisma();
+            // If Prisma is not available, return empty array
+            if (!prisma.user) {
+                return reply.send([]);
+            }
             const user = await prisma.user.findUnique({
                 where: { walletAddress },
             });
