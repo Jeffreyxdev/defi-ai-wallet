@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  walletAddress  String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  riskProfile    RiskProfile?
+  tradeLogs      TradeLog[]
+  aiDecisions    AIDecisions[]
+  settings       Settings?
+}
+
+model Settings {
+  id                String  @id @default(cuid())
+  userId            String  @unique
+  user              User    @relation(fields: [userId], references: [id])
+  autoTradeEnabled  Boolean @default(false)
+  maxAllocation     Float   @default(0.1) // 10%
+  dailyTradeLimit   Int     @default(5)
+  stopLossPercent   Float   @default(10.0) // 10%
+}
+
+model RiskProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id])
+  riskScore       Int      @default(50) // 1-100
+  riskLevel       String   @default("Medium") // Low, Medium, High
+  description     String?
+  updatedAt       DateTime @updatedAt
+}
+
+model TradeLog {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  inputToken      String
+  outputToken     String
+  inputAmount     String
+  outputAmount    String
+  txHash          String   @unique
+  status          String   @default("PENDING") // PENDING, SUCCESS, FAILED
+  riskScoreAtTrade Int?
+  createdAt       DateTime @default(now())
+}
+
+model TokenRisk {
+  id              String   @id @default(cuid())
+  mintAddress     String   @unique
+  symbol          String?
+  rugRiskScore    Int
+  riskLevel       String   // Safe, Caution, High Risk
+  explanation     String
+  liquidityLocked Boolean?
+  mintRenounced   Boolean?
+  lastChecked     DateTime @default(now())
+}
+
+model AIDecisions {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  intent          String
+  suggestion      String
+  confidence      Float
+  reasoning       String
+  riskRating      Int
+  executed        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
