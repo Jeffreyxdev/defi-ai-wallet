@@ -4,7 +4,7 @@ Welcome to Scentree! This is your complete guide to the AI-powered Solana tradin
 
 ---
 
-## 📚 Documentation Files
+##  Documentation Files
 
 ### Getting Started
 1. **[README.md](README.md)** - Start here!
@@ -62,7 +62,7 @@ Welcome to Scentree! This is your complete guide to the AI-powered Solana tradin
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Option 1: Automated Setup (Recommended)
 ```bash
@@ -89,7 +89,7 @@ cd frontend && npm run dev   # Terminal 2
 
 ---
 
-## 📖 Reading Order
+##  Reading Order
 
 **For New Team Members**:
 1. Read [README.md](README.md) - Overview
@@ -113,11 +113,11 @@ cd frontend && npm run dev   # Terminal 2
 
 ---
 
-## 🗂️ Project Structure
+##  Project Structure
 
 ```
 scentree/
-├── 📖 Documentation
+├──  Documentation
 │   ├── README.md            ← Project overview
 │   ├── DEVELOPMENT.md       ← Developer guide
 │   ├── API.md               ← API reference
@@ -125,13 +125,13 @@ scentree/
 │   ├── SUMMARY.md           ← Implementation summary
 │   └── INDEX.md (this file)
 │
-├── ⚡ Frontend (Next.js)
+├── Frontend (Next.js)
 │   ├── src/app/            # Pages and layouts
 │   ├── src/components/     # React components
 │   ├── src/hooks/          # Custom hooks
 │   └── src/lib/            # Utilities
 │
-└── 🔧 Backend (Fastify)
+└──  Backend (Fastify)
     ├── src/index.ts        # Server entry
     ├── src/controllers/    # API routes
     ├── src/services/       # Business logic
@@ -140,49 +140,49 @@ scentree/
 
 ---
 
-## ✅ Project Status
+##  Project Status
 
 ### Completed Phases
-- ✅ **Phase 1**: Wallet Connect + Portfolio View
-- ✅ **Phase 2**: AI Intent Engine
+- **Phase 1**: Wallet Connect + Portfolio View
+-  **Phase 2**: AI Intent Engine
 
 ### In Progress
-- 🟡 **Phase 3**: Manual Trading + Anti-Rug
+-  **Phase 3**: Manual Trading + Anti-Rug
 
 ### Planned
-- 📋 **Phase 4**: Guarded Auto-Trading
+-  **Phase 4**: Guarded Auto-Trading
 
 ### Build Status
-- ✅ Frontend: Compiles successfully
-- ✅ Backend: TypeScript validation passing
-- ⏳ Database: Ready for migration
+-  Frontend: Compiles successfully
+-  Backend: TypeScript validation passing
+-  Database: Ready for migration
 
 ---
 
-## 🎯 Key Features
+##  Key Features
 
 ### Phase 1 & 2 (Complete)
-- 🟢 Solana wallet connection
-- 🟢 Real-time portfolio display
-- 🟢 AI-powered analysis (xAI Grok)
-- 🟢 Risk scoring (0-100)
-- 🟢 Decision logging
+-  Solana wallet connection
+-  Real-time portfolio display
+-  AI-powered analysis (xAI Grok)
+-  Risk scoring (0-100)
+-  Decision logging
 
 ### Phase 3 (In Progress)
-- 🟡 Token risk scanning
-- 🟡 Anti-rug detection
-- 🟡 Manual trading UI
-- 🟡 Jupiter DEX integration
+-  Token risk scanning
+-  Anti-rug detection
+-  Manual trading UI
+-  Jupiter DEX integration
 
 ### Phase 4 (Planned)
-- 📋 Auto-trading engine
-- 📋 Secure vault system
-- 📋 Guardrail enforcement
-- 📋 Rate limiting
+-  Auto-trading engine
+-  Secure vault system
+-  Guardrail enforcement
+-  Rate limiting
 
 ---
 
-## 🔗 Important Links
+##  Important Links
 
 ### Documentation
 - [Development Guide](DEVELOPMENT.md)
@@ -205,7 +205,7 @@ scentree/
 
 ---
 
-## 🛠️ Development Commands
+##  Development Commands
 
 ### Frontend
 ```bash
@@ -241,7 +241,7 @@ npx prisma studio                      # Open Prisma Studio
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: "Port already in use"
 ```bash
@@ -284,7 +284,7 @@ echo $DATABASE_URL
 
 ---
 
-## 🎓 Learning Path
+##  Learning Path
 
 ### Beginner
 1. [README.md](README.md) - Overview
@@ -303,7 +303,7 @@ echo $DATABASE_URL
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 ### Immediate Priority
 1. **Setup Database**: Run `npx prisma migrate deploy`
@@ -319,7 +319,7 @@ echo $DATABASE_URL
 
 ---
 
-## 📞 Getting Help
+##  Getting Help
 
 **Documentation**:
 - [DEVELOPMENT.md](DEVELOPMENT.md) - Architecture and how-to guides
@@ -353,21 +353,21 @@ echo $DATABASE_URL
 
 ---
 
-## ✨ What's Ready
+##  What's Ready
 
-✅ Full-stack development environment
-✅ Frontend dashboard with wallet integration
-✅ Backend API with 6 endpoints
-✅ Database schema with Prisma ORM
-✅ AI integration (xAI Grok)
-✅ Risk assessment system
-✅ Comprehensive documentation
-✅ Automated setup script
-✅ Production build configuration
+ Full-stack development environment
+ Frontend dashboard with wallet integration
+ Backend API with 6 endpoints
+ Database schema with Prisma ORM
+ AI integration (xAI Grok)
+ Risk assessment system
+ Comprehensive documentation
+ Automated setup script
+ Production build configuration
 
 ---
 
-## 🎯 Vision
+##  Vision
 
 **Scentree** is building the future of Solana trading by combining:
 - **Smart Risk Assessment**: Know what you're buying before you buy it
@@ -377,13 +377,13 @@ echo $DATABASE_URL
 
 ---
 
-## 📄 License
+##  License
 
 This project is provided as-is for development and bounty completion.
 
 ---
 
-## 🙏 Questions?
+##  Questions?
 
 1. Check the relevant documentation file
 2. Review code examples in the project
@@ -394,6 +394,6 @@ This project is provided as-is for development and bounty completion.
 
 **Last Updated**: March 15, 2025
 **Version**: 1.0.0
-**Status**: 🟢 Active Development
+**Status**:  Active Development
 
 **[START HERE →](README.md)**
