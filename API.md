@@ -2,7 +2,7 @@
 
 Complete documentation for all Scentree backend API endpoints.
 
-## 🔐 Authentication
+##  Authentication
 
 Currently, **no authentication** is required. In production, implement:
 
