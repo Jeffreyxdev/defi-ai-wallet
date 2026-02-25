@@ -4,13 +4,13 @@ A comprehensive AI-powered Solana wallet management and trading platform with bu
 
 ##  Features
 
-### Phase 1: Wallet Connect + Portfolio View ✅
+### Phase 1: Wallet Connect + Portfolio View 
 - **Solana Wallet Integration**: Support for Phantom and Solflare wallets
 - **Portfolio Dashboard**: Real-time SOL and token balance tracking
 - **Risk Scoring**: Dynamic risk assessment based on portfolio composition
 - **AI Analysis UI**: Visual risk level indicators and recommendations
 
-### Phase 2: AI Intent Engine ✅
+### Phase 2: AI Intent Engine 
 - **xAI Grok Integration**: Natural language intent analysis
 - **Smart Suggestions**: AI-powered trading recommendations
 - **Confidence Scoring**: ML-based confidence metrics for each decision
@@ -204,7 +204,7 @@ Contributions welcome! Please:
 
 MIT License - see LICENSE file for details
 
-## 🎯 Roadmap
+##  Roadmap
 
 - [ ] Phase 3: Manual trading + anti-rug (March 2026)
 - [ ] Phase 4: Guarded auto-trading (April 2026)
@@ -212,7 +212,7 @@ MIT License - see LICENSE file for details
 - [ ] Mobile app
 - [ ] Community features
 
-## 🔗 Links
+##  Links
 
 - [Solana Docs](https://docs.solana.com)
 - [Jupiter Docs](https://docs.jup.ag)
